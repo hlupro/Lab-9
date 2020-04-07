@@ -186,7 +186,14 @@ void RBTree :: printLevel(TreeNode* x, int l)
   }
   if(l == 1)
   {
-    std::cout << x->key << " ";
+    if(x->color == RED)
+    {
+      std::cout << "R-" << x->key << " ";
+    }
+    else
+    {
+      std::cout << "B-" << x->key << " ";
+    }
   }
   else if(l > 1)
   {
