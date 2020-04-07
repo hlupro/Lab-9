@@ -2,21 +2,21 @@
 
 RBTree :: RBTree()
 {
-  root = nullptr;
+  root = NIL;
 }
 
 RBTree :: RBTree(int n)
 {
   root = new TreeNode;
   root->key = n;
-  root->left = nullptr;
-  root->right = nullptr;
-  root->parent = nullptr;
+  root->left = NIL;
+  root->right = NIL;
+  root->parent = NIL;
 }
 
 RBTree :: TreeNode* RBTree :: search(TreeNode* x, int k)
 {
-  if (x == nullptr || x->key == k)
+  if (x == NIL || x->key == k)
   {
     return x;
   }
@@ -32,7 +32,7 @@ RBTree :: TreeNode* RBTree :: search(TreeNode* x, int k)
 
 RBTree :: TreeNode* RBTree :: minimum(TreeNode* x)
 {
-  while (x->left != nullptr)
+  while (x->left != NIL)
   {
     x = x->left;
   }
@@ -41,7 +41,7 @@ RBTree :: TreeNode* RBTree :: minimum(TreeNode* x)
 
 RBTree :: TreeNode* RBTree :: maximum(TreeNode* x)
 {
-  while(x->right != nullptr)
+  while(x->right != NIL)
   {
     x = x->right;
   }
@@ -50,12 +50,12 @@ RBTree :: TreeNode* RBTree :: maximum(TreeNode* x)
 
 RBTree :: TreeNode* RBTree :: sucessor(TreeNode* x)
 {
-  if (x->right != nullptr)
+  if (x->right != NIL)
   {
     return minimum(x->right);
   }
   TreeNode* y = x->parent;
-  while(y != nullptr && x == y->right)
+  while(y != NIL && x == y->right)
   {
     x = y;
     y = y->parent;
@@ -65,11 +65,11 @@ RBTree :: TreeNode* RBTree :: sucessor(TreeNode* x)
 
 void RBTree :: deleteNode(TreeNode* z)
 {
-  if(z->left == nullptr)
+  if(z->left == NIL)
   {
     transplant(z,z->right);
   }
-  else if(z->right == nullptr)
+  else if(z->right == NIL)
   {
     transplant(z,z->left);
   }
@@ -91,7 +91,7 @@ void RBTree :: deleteNode(TreeNode* z)
 
 void RBTree :: transplant(TreeNode* u, TreeNode* v)
 {
-  if(u->parent == nullptr)
+  if(u->parent == NIL)
   {
     root = v;
   }
@@ -103,15 +103,42 @@ void RBTree :: transplant(TreeNode* u, TreeNode* v)
   {
     u->parent->right = v;
   }
-  if(v != nullptr)
-  {
     v->parent = u->parent;
+}
+
+void RBTree :: leftRotate(TreeNode* x)
+{
+  TreeNode* y = x->right;
+  x->right = y->left;
+  if(y->left != NIL)
+  {
+    y->left->parent = x;
   }
+  y->parent = x->parent;
+  if(x->parent == NIL)
+  {
+    root = y;
+  }
+  else if(x == x->parent->left)
+  {
+    x->parent->left = y;
+  }
+  else
+  {
+    x->parent->right = y;
+    y->left = x;
+    x->parent = y;
+  }
+}
+
+void RBTree :: rightRotate(TreeNode* x)
+{
+
 }
 
 int RBTree :: getHeight(TreeNode* x)
 {
-  if(x == nullptr)
+  if(x == NIL)
   {
     return 0;
   }
@@ -132,7 +159,7 @@ int RBTree :: getHeight(TreeNode* x)
 
 void RBTree :: printLevel(TreeNode* x, int l)
 {
-  if(x == nullptr)
+  if(x == NIL)
   {
     std::cout << "* ";
     return;
@@ -150,7 +177,7 @@ void RBTree :: printLevel(TreeNode* x, int l)
 
 void RBTree :: inorder(TreeNode* x)
 {
-  if(x != nullptr)
+  if(x != NIL)
   {
     inorder(x->left);
     std::cout << x->key << " ";
@@ -161,13 +188,13 @@ void RBTree :: inorder(TreeNode* x)
 void RBTree :: insert(int n)
 {
   TreeNode* z = new TreeNode;
-  TreeNode* y = nullptr;
+  TreeNode* y = NIL;
   z->key = n;
-  z->right = nullptr;
-  z->left = nullptr;
-  z->parent = nullptr;
+  z->right = NIL;
+  z->left = NIL;
+  z->parent = NIL;
   TreeNode* x = root;
-  while (x != nullptr)
+  while (x != NIL)
   {
     y = x;
     if(z->key < x->key)
@@ -180,7 +207,7 @@ void RBTree :: insert(int n)
     }
   }
   z->parent = y;
-  if (y == nullptr)
+  if (y == NIL)
   {
     root = z;
   }
@@ -191,13 +218,49 @@ void RBTree :: insert(int n)
   else
   {
     y->right = z;
+    z->left = NIL;
+    z->right = NIL;
+    z->color = RED;
+    insertFixup(z);
   }
 }
+
+void RBTree :: insertFixup(TreeNode* z)
+{
+  TreeNode* y;
+  while (z->parent->color == RED)
+  {
+    if(z->parent == z->parent->parent->left)
+    {
+      y = z->parent->parent->right;
+      if(y->color == RED)
+      {
+        z->parent->color == BLACK;
+        y->color = BLACK;
+        z->parent->parent->color = RED;
+        z = z->parent->parent;
+      }
+      else if(z == z->parent->right)
+      {
+        z = z->parent;
+        leftRotate(z);
+      }
+      z->parent->color = BLACK;
+      z->parent->parent->color = RED;
+      rightRotate(z->parent->parent);
+      }
+      else
+      {
+        //Then clause
+      }
+    }
+    root->color = BLACK;
+  }
 
 void RBTree :: getSearch( int k)
 {
   std::cout << "Searching for a node in the tree with the key " << k  << "..."<< std::endl;
-  if(search(root, k) != nullptr)
+  if(search(root, k) != NIL)
   {
     std::cout << "Sucess! There exists a node in the tree with the key " << k << "\n" << std::endl;
   }
@@ -252,10 +315,10 @@ void RBTree :: printInorder()
 
 void RBTree :: deleteTree()
 {
-  if(root != nullptr)
+  if(root != NIL)
   {
     std::cout << "Now deleting the tree." << "\n" << std::endl;
-    while(root != nullptr)
+    while(root != NIL)
     {
       deleteNode(root);
     }
@@ -283,7 +346,7 @@ void RBTree :: getDelete(int k)
 
 void RBTree :: print()
 {
-  if(root == nullptr)
+  if(root == NIL)
   {
     std::cout << "The tree is empty.\n" << std::endl;
   }
@@ -300,7 +363,7 @@ void RBTree :: print()
 
 RBTree :: ~RBTree()
 {
-  while(root != nullptr)
+  while(root != NIL)
   {
     deleteNode(root);
   }

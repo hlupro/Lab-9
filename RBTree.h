@@ -5,8 +5,8 @@
 
 enum color_t {
   RED,
-  Black
-}
+  BLACK
+};
 
 
 class RBTree{
@@ -27,7 +27,10 @@ class RBTree{
    TreeNode* maximum(TreeNode* x);
    TreeNode* sucessor(TreeNode* x);
    void deleteNode(TreeNode* z);
+   void insertFixup(TreeNode* z);
    void transplant(TreeNode* u, TreeNode* v);
+   void leftRotate(TreeNode* x);
+   void rightRotate(TreeNode* x);
    int getHeight(TreeNode* x);
    void printLevel(TreeNode* x, int l);
    void inorder(TreeNode* x);
