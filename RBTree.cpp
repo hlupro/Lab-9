@@ -218,11 +218,11 @@ void RBTree :: insert(int n)
   else
   {
     y->right = z;
-    z->left = NIL;
-    z->right = NIL;
-    z->color = RED;
-    insertFixup(z);
   }
+  z->left = NIL;
+  z->right = NIL;
+  z->color = RED;
+  insertFixup(z);
 }
 
 void RBTree :: insertFixup(TreeNode* z)
