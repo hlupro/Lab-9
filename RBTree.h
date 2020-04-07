@@ -3,17 +3,23 @@
 
 #include <iostream>
 
-
+enum color_t {
+  RED,
+  Black
+}
 
 
 class RBTree{
  private:
    struct TreeNode{
      int key;
+     color_t color;
      TreeNode* left;
      TreeNode* right;
      TreeNode* parent;
    };
+
+   static TreeNode* const NIL;
 
    TreeNode* root;
    TreeNode* search(TreeNode* x, int k);
@@ -43,5 +49,7 @@ class RBTree{
 
 
 };
+
+RBTree::TreeNode* const RBTree::NIL = new TreeNode({0,BLACK, nullptr, nullptr, nullptr});
 
 #endif
