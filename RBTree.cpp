@@ -217,9 +217,6 @@ void RBTree :: insert(int n)
   TreeNode* z = new TreeNode;
   TreeNode* y = NIL;
   z->key = n;
-  z->right = NIL;
-  z->left = NIL;
-  z->parent = NIL;
   TreeNode* x = root;
   while (x != NIL)
   {
