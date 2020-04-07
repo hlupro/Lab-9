@@ -133,7 +133,27 @@ void RBTree :: leftRotate(TreeNode* x)
 
 void RBTree :: rightRotate(TreeNode* x)
 {
-
+  TreeNode* y = x->left;
+  x->left = y->right;
+  if(y->right != NIL)
+  {
+    y->right->parent = x;
+  }
+  y->parent = x->parent;
+  if(x->parent == NIL)
+  {
+    root = y;
+  }
+  else if(x == x->parent->right)
+  {
+    x->parent->right = y;
+  }
+  else
+  {
+    x->parent->left = y;
+    y->right = x;
+    x->parent = y;
+  }
 }
 
 int RBTree :: getHeight(TreeNode* x)
@@ -248,7 +268,7 @@ void RBTree :: insertFixup(TreeNode* z)
       z->parent->color = BLACK;
       z->parent->parent->color = RED;
       rightRotate(z->parent->parent);
-      }
+    }
       else
       {
         //Then clause
