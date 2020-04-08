@@ -65,18 +65,29 @@ RBTree :: TreeNode* RBTree :: sucessor(TreeNode* x)
 
 void RBTree :: deleteNode(TreeNode* z)
 {
+  TreeNode* x;
+  TreeNode* y = z;
+  color_t original = y->color;
   if(z->left == NIL)
   {
+    x = z->right;
     transplant(z,z->right);
   }
   else if(z->right == NIL)
   {
+    x = z->left;
     transplant(z,z->left);
   }
   else
   {
-    TreeNode* y = minimum(z->right);
-    if(y->parent != z)
+    y = minimum(z->right);
+    original = y->color;
+    x = y->right;
+    if(y->parent == z)
+    {
+      x->parent = y;
+    }
+    else
     {
       transplant(y,y->right);
       y->right = z->right;
@@ -85,14 +96,103 @@ void RBTree :: deleteNode(TreeNode* z)
     transplant(z,y);
     y->left = z->left;
     y->left->parent = y;
+    y->color = z->color;
+    print();
+  }
+  if(original == BLACK)
+  {
+    deleteFixup(x);
   }
   delete z;
 }
 
+void RBTree :: deleteFixup(TreeNode* x)
+{
+  if(x == NIL)
+  {
+    std::cout << "ITS NIL" << std::endl;
+  }
+  TreeNode* w;
+  while (x != root && x->color == BLACK)
+  {
+    if(x == x->parent->left)
+    {
+      std::cout << "Left Child" << std::endl;
+      w = x->parent->right;
+      if(w->color == RED)
+      {
+        w->color = BLACK;
+        x->parent->color = RED;
+        leftRotate(x->parent);
+        w = x->parent->right;
+      }
+      if(w->left->color == BLACK && w->right->color == BLACK)
+      {
+        w->color = RED;
+        x = x->parent;
+      }
+      else
+      {
+        if(w->right->color == BLACK)
+        {
+          w->left->color = BLACK;
+          w->color = RED;
+          rightRotate(w);
+          w = x->parent->right;
+        }
+        w->color = x->parent->color;
+        x->parent->color = BLACK;
+        w->right->color = BLACK;
+        leftRotate(x->parent);
+        x = root;
+      }
+    }
+    else
+    {
+      std::cout << "Right Child" << std::endl;
+      w = x->parent->left;
+      if(w->color == RED)
+      {
+        std::cout << "W is Red" << std::endl;
+        w->color = BLACK;
+        x->parent->color = RED;
+        rightRotate(x->parent);
+        w = x->parent->left;
+      }
+      if(w->left->color == BLACK && w->right->color == BLACK)
+      {
+        std::cout << "W's kids are black" << std::endl;
+        w->color = RED;
+        x = x->parent;
+      }
+      else
+      {
+        if(w->left->color == BLACK)
+        {
+          std::cout << "left black" << std::endl;
+          w->right->color = BLACK;
+          w->color = RED;
+          leftRotate(w);
+          w = x->parent->left;
+        }
+        std::cout << "RIGHT ROTATE" << std::endl;
+        w->color = x->parent->color;
+        x->parent->color = BLACK;
+        w->left->color = BLACK;
+        rightRotate(x->parent);
+        x = root;
+      }
+    }
+  }
+  x->color = BLACK;
+}
+
 void RBTree :: transplant(TreeNode* u, TreeNode* v)
 {
+  std::cout << "U: " << u->key << " V: " << v->key << std::endl;
   if(u->parent == NIL)
   {
+    std::cout << "V Root: " << v->key << std::endl;
     root = v;
   }
   else if(u == u->parent->left)
@@ -126,13 +226,14 @@ void RBTree :: leftRotate(TreeNode* x)
   else
   {
     x->parent->right = y;
+  }
     y->left = x;
     x->parent = y;
-  }
 }
 
 void RBTree :: rightRotate(TreeNode* x)
 {
+  std::cout << "Right Roate " << x->key << std::endl;
   TreeNode* y = x->left;
   x->left = y->right;
   if(y->right != NIL)
@@ -151,9 +252,9 @@ void RBTree :: rightRotate(TreeNode* x)
   else
   {
     x->parent->left = y;
-    y->right = x;
-    x->parent = y;
   }
+  y->right = x;
+  x->parent = y;
 }
 
 int RBTree :: getHeight(TreeNode* x)
@@ -188,11 +289,11 @@ void RBTree :: printLevel(TreeNode* x, int l)
   {
     if(x->color == RED)
     {
-      std::cout << "R-" << x->key << " ";
+      std::cout << "R[" << x->key << "] ";
     }
     else
     {
-      std::cout << "B-" << x->key << " ";
+      std::cout << "B[" << x->key << "] ";
     }
   }
   else if(l > 1)
@@ -251,35 +352,67 @@ void RBTree :: insert(int n)
 
 void RBTree :: insertFixup(TreeNode* z)
 {
+  std::cout << z->key << std::endl;
   TreeNode* y;
   while (z->parent->color == RED)
   {
     if(z->parent == z->parent->parent->left)
     {
+      std::cout << "TEST 1" << std::endl;
       y = z->parent->parent->right;
       if(y->color == RED)
       {
-        z->parent->color == BLACK;
+        std::cout << "TEST 2" << std::endl;
+        z->parent->color = BLACK;
         y->color = BLACK;
         z->parent->parent->color = RED;
         z = z->parent->parent;
       }
-      else if(z == z->parent->right)
-      {
-        z = z->parent;
-        leftRotate(z);
-      }
-      z->parent->color = BLACK;
-      z->parent->parent->color = RED;
-      rightRotate(z->parent->parent);
-    }
       else
       {
-        //Then clause
+        if(z == z->parent->right)
+        {
+          std::cout << "TEST Left" << std::endl;
+          z = z->parent;
+          leftRotate(z);
+        }
+        std::cout << "TEST Right" << std::endl;
+        z->parent->color = BLACK;
+        z->parent->parent->color = RED;
+        rightRotate(z->parent->parent);
       }
     }
-    root->color = BLACK;
+    else
+    {
+      y = z->parent->parent->left;
+      if(y->color == RED)
+      {
+        std::cout << "TEST 2" << std::endl;
+        z->parent->color = BLACK;
+        y->color = BLACK;
+        z->parent->parent->color = RED;
+        z = z->parent->parent;
+      }
+      else
+      {
+        if(z == z->parent->left)
+        {
+          std::cout << "TEST Left2" << std::endl;
+          z = z->parent;
+          rightRotate(z);
+        }
+        else
+        {
+          std::cout << "TEST Right2" << std::endl;
+          z->parent->color = BLACK;
+          z->parent->parent->color = RED;
+          leftRotate(z->parent->parent);
+        }
+      }
+    }
   }
+  root->color = BLACK;
+}
 
 void RBTree :: getSearch( int k)
 {
@@ -344,11 +477,14 @@ void RBTree :: deleteTree()
     std::cout << "Now deleting the tree." << "\n" << std::endl;
     while(root != NIL)
     {
+      std::cout << "DELETING " << root->key << std::endl;
+      print();
       deleteNode(root);
     }
   }
   else
   {
+    delete NIL;
     std::cout << "Error. Tree already deleted or does not exist." << "\n" << std::endl;
   }
 }
@@ -385,10 +521,18 @@ void RBTree :: print()
   }
 }
 
+void RBTree :: getChildren(int n)
+{
+  TreeNode* z = search(root, n);
+  std::cout << "Right " << z->right->key << std::endl;
+  std::cout << "Left " << z->left->key << std::endl;
+}
+
 RBTree :: ~RBTree()
 {
   while(root != NIL)
   {
     deleteNode(root);
   }
+  delete NIL;
 }

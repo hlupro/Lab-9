@@ -27,6 +27,7 @@ class RBTree{
    TreeNode* maximum(TreeNode* x);
    TreeNode* sucessor(TreeNode* x);
    void deleteNode(TreeNode* z);
+   void deleteFixup(TreeNode* x);
    void insertFixup(TreeNode* z);
    void transplant(TreeNode* u, TreeNode* v);
    void leftRotate(TreeNode* x);
@@ -38,6 +39,7 @@ class RBTree{
   public:
     RBTree();
     RBTree(int n);
+    void getChildren(int n);
     void insert(int n);
     void getSearch(int k);
     void getMin();
@@ -49,10 +51,7 @@ class RBTree{
     void getDelete(int k);
     void print();
     ~RBTree();
-
-
 };
 
-RBTree::TreeNode* const RBTree::NIL = new TreeNode({0,BLACK, nullptr, nullptr, nullptr});
 
 #endif
