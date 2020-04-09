@@ -1,3 +1,7 @@
+//Hunter Lupro
+//lab9
+//April 9th, 2020
+
 #include "RBTree.h"
 
 RBTree :: RBTree()
@@ -5,15 +9,8 @@ RBTree :: RBTree()
   root = NIL;
 }
 
-RBTree :: RBTree(int n)
-{
-  root = new TreeNode;
-  root->key = n;
-  root->left = NIL;
-  root->right = NIL;
-  root->parent = NIL;
-}
-
+//Takes in a TreeNode that acts as the root and searches for a
+//node with the value k returns the node if found and NIL if not found
 RBTree :: TreeNode* RBTree :: search(TreeNode* x, int k)
 {
   if (x == NIL || x->key == k)
@@ -30,6 +27,7 @@ RBTree :: TreeNode* RBTree :: search(TreeNode* x, int k)
   }
 }
 
+//Finds and returns the minimum of the tree
 RBTree :: TreeNode* RBTree :: minimum(TreeNode* x)
 {
   while (x->left != NIL)
@@ -39,6 +37,7 @@ RBTree :: TreeNode* RBTree :: minimum(TreeNode* x)
   return x;
 }
 
+//Finds and returns the maximum of the tree
 RBTree :: TreeNode* RBTree :: maximum(TreeNode* x)
 {
   while(x->right != NIL)
@@ -48,6 +47,8 @@ RBTree :: TreeNode* RBTree :: maximum(TreeNode* x)
   return x;
 }
 
+//Takes in a node and finds the node the smallest value node greater
+//than itself in the tree
 RBTree :: TreeNode* RBTree :: sucessor(TreeNode* x)
 {
   if (x->right != NIL)
@@ -63,6 +64,7 @@ RBTree :: TreeNode* RBTree :: sucessor(TreeNode* x)
   return y;
 }
 
+//Deletes the node  z from the tree
 void RBTree :: deleteNode(TreeNode* z)
 {
   TreeNode* x;
@@ -105,6 +107,8 @@ void RBTree :: deleteNode(TreeNode* z)
   delete z;
 }
 
+//Called after deleting a node and fixes the red-black to follow
+//all the rules that might have been broken by delete
 void RBTree :: deleteFixup(TreeNode* x)
 {
   if(x == NIL)
@@ -179,6 +183,7 @@ void RBTree :: deleteFixup(TreeNode* x)
   x->color = BLACK;
 }
 
+//Transplant replaces the subtree at node u with the subtree at node v
 void RBTree :: transplant(TreeNode* u, TreeNode* v)
 {
   if(u->parent == NIL)
@@ -196,6 +201,8 @@ void RBTree :: transplant(TreeNode* u, TreeNode* v)
     v->parent = u->parent;
 }
 
+//leftRotate pivots around the the node x and its right child. altering the tree to where
+//the node x becomes the left child of its right child and the right child is now the parent.
 void RBTree :: leftRotate(TreeNode* x)
 {
   TreeNode* y = x->right;
@@ -221,6 +228,8 @@ void RBTree :: leftRotate(TreeNode* x)
   x->parent = y;
 }
 
+//rightRotate pivots around the the node x and its left child. altering the tree to where
+//the node x becomes the left child of its left child and the left child is now the parent.
 void RBTree :: rightRotate(TreeNode* x)
 {
   TreeNode* y = x->left;
@@ -246,6 +255,8 @@ void RBTree :: rightRotate(TreeNode* x)
   x->parent = y;
 }
 
+//Caclulates the height of the tree by recursively computing the height of the left and right Tree
+// and taking the max of the two
 int RBTree :: getHeight(TreeNode* x)
 {
   if(x == NIL)
@@ -267,6 +278,7 @@ int RBTree :: getHeight(TreeNode* x)
   }
 }
 
+//Prints all the nodes of the tree at level l
 void RBTree :: printLevel(TreeNode* x, int l)
 {
   if(x == NIL)
@@ -292,6 +304,7 @@ void RBTree :: printLevel(TreeNode* x, int l)
   }
 }
 
+//Prints the nodes of the tree inorder
 void RBTree :: inorder(TreeNode* x)
 {
   if(x != NIL)
@@ -302,6 +315,7 @@ void RBTree :: inorder(TreeNode* x)
   }
 }
 
+//Creates a new node based on the int n and inserts it into the tree
 void RBTree :: insert(int n)
 {
   TreeNode* z = new TreeNode;
@@ -339,6 +353,8 @@ void RBTree :: insert(int n)
   insertFixup(z);
 }
 
+//Insert fixup fixes the RebBlack Tree so it fits all the RB tree properties that
+//might have been broken after inserting
 void RBTree :: insertFixup(TreeNode* z)
 {
   TreeNode* y;
@@ -395,6 +411,7 @@ void RBTree :: insertFixup(TreeNode* z)
   root->color = BLACK;
 }
 
+//getSearch handles all the print functions to test the search function
 void RBTree :: getSearch(int k)
 {
   std::cout << "Searching for a node in the tree with the key " << k  << "..."<< std::endl;
@@ -408,26 +425,31 @@ void RBTree :: getSearch(int k)
   }
 }
 
+//Used for timing where no print statements are needed
 void RBTree :: timeSearch(int k)
 {
   search(root, k);
 }
 
+//Returns the min after calling the private function minimum
 void RBTree :: getMin()
 {
   std::cout << "The minimum is " << minimum(root)->key << ".\n" << std::endl;
 }
 
+//Returns the max after calling the private function maximum
 void RBTree :: getMax()
 {
   std::cout << "The maximum is " << maximum(root)->key << ".\n" << std::endl;
 }
 
+//Returns the root of the tree
 RBTree ::TreeNode* RBTree :: getRoot()
 {
   return root;
 }
 
+//Print messages for the sucessor private function
 void RBTree :: getSucessor(int k)
 {
   std::cout << "\nLooking for the sucessor of " << k << std::endl;
@@ -450,12 +472,14 @@ void RBTree :: getSucessor(int k)
   }
 }
 
+//Used to call the private function from the main
 void RBTree :: printInorder()
 {
   inorder(root);
   std::cout << "\n" << std::endl;
 }
 
+//Delete function used to delete the entire tree
 void RBTree :: deleteTree()
 {
   if(root != NIL)
@@ -471,11 +495,14 @@ void RBTree :: deleteTree()
   }
 }
 
+//This function deletes the static TreeNode* NIL
 void RBTree :: deleteNIL()
 {
   delete NIL;
 }
 
+//Handles the print statements for testing, first searchs to see if node is in tree
+//if it is it calles delete Node so it is delete.
 void RBTree :: getDelete(int k)
 {
   std::cout << "\nDeleting the node with the key " << k << std::endl;
@@ -491,6 +518,7 @@ void RBTree :: getDelete(int k)
   }
 }
 
+//Prints the Tree
 void RBTree :: print()
 {
   if(root == NIL)
@@ -510,6 +538,7 @@ void RBTree :: print()
   }
 }
 
+//Deconstructor for RBTree that uses the deletenode function.
 RBTree :: ~RBTree()
 {
   while(root != NIL)

@@ -5,6 +5,8 @@
 
 RBTree::TreeNode* const RBTree::NIL = new TreeNode({0,BLACK, NULL, NULL, NULL});
 
+//Time function that takes times the insert, search, and delete algorithms for RB
+//Trees and binary Trees
 void time(int n)
 {
   RBTree x;
