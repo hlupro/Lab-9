@@ -1,25 +1,19 @@
-#ifndef RBTREE_H
-#define RBTREE_H
+#ifndef BINARYTREE_H
+#define BINARYTREE_H
 
 #include <iostream>
 
-enum color_t {
-  RED,
-  BLACK
-};
 
 
-class RBTree{
+
+class BinaryTree{
  private:
    struct TreeNode{
      int key;
-     color_t color;
      TreeNode* left;
      TreeNode* right;
      TreeNode* parent;
    };
-
-   static TreeNode* const NIL;
 
    TreeNode* root;
    TreeNode* search(TreeNode* x, int k);
@@ -27,32 +21,28 @@ class RBTree{
    TreeNode* maximum(TreeNode* x);
    TreeNode* sucessor(TreeNode* x);
    void deleteNode(TreeNode* z);
-   void deleteFixup(TreeNode* x);
-   void insertFixup(TreeNode* z);
    void transplant(TreeNode* u, TreeNode* v);
-   void leftRotate(TreeNode* x);
-   void rightRotate(TreeNode* x);
    int getHeight(TreeNode* x);
    void printLevel(TreeNode* x, int l);
    void inorder(TreeNode* x);
 
   public:
-    RBTree();
-    RBTree(int n);
+    BinaryTree();
+    BinaryTree(int n);
     void insert(int n);
-    void getSearch(int k);
     void timeSearch(int k);
+    void getSearch(int k);
     void getMin();
     void getMax();
     void getSucessor(int k);
     TreeNode* getRoot();
     void printInorder();
     void deleteTree();
-    void deleteNIL();
     void getDelete(int k);
     void print();
-    ~RBTree();
-};
+    ~BinaryTree();
 
+
+};
 
 #endif
